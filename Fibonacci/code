@@ -1,0 +1,20 @@
+import fileinput
+from math import sqrt
+
+def F(n):
+    return ((1+sqrt(5))**n-(1-sqrt(5))**n)/(2**n*sqrt(5))
+
+# Fib repeats after 60 numbers, so gen first 60 numbers
+fibs = [int(F(n)) for n in range(0,60)]
+
+#Save input by lines
+stdin = fileinput.input()
+#Skip first line
+next(stdin)
+
+for line in stdin:
+    # find the index which we know the answer of
+    index = (int(line)+1) % 60
+
+    #grab the last digit as its our answer
+    print(fibs[index] % 10)
