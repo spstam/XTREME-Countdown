@@ -1,0 +1,78 @@
+ #include <stdio.h>
+
+#define MAX 200
+#define INF 1000000000
+
+int grid[MAX][MAX];
+int dp[MAX][MAX];
+
+int min(int a, int b) {
+    return (a < b) ? a : b;
+}
+
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+
+void print_dp(int r, int c) {
+    printf("DP table:\n");
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            if (dp[i][j] == INF) {
+                printf("INF ");
+            } else {
+                printf("%d ", dp[i][j]);
+            }
+        }
+        printf("\n");
+    }
+}
+
+int main() {
+    int r, c;
+
+    // Reading the dimensions of the grid
+    scanf("%d %d", &r, &c);
+    
+    // Reading the grid values
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            scanf("%d", &grid[i][j]);
+        }
+    }
+
+    // Initialize the dp array with large values
+    for (int i = 0; i < r; i++) {
+        for (int j = 0; j < c; j++) {
+            dp[i][j] = INF;
+        }
+    }
+
+    // Base case: minimum health required at the destination (r-1, c-1) is 1
+    dp[r-1][c-1] = 1;
+    // print_dp(r, c);
+
+    // Fill the dp table backwards from the bottom-right corner
+    for (int i = r - 1; i >= 0; i--) {
+        for (int j = c - 1; j >= 0; j--) {
+            if (i == r - 1 && j == c - 1) continue; // Skip the bottom-right corner
+            int right = (j + 1 < c) ? dp[i][j + 1] : INF;  // Health if moving right
+            int down = (i + 1 < r) ? dp[i + 1][j] : INF;   // Health if moving down
+            dp[i][j] = max(1, min(right, down) - grid[i][j]);
+            // print_dp(r, c);
+        }
+    }
+
+    // printf("Grid:\n");
+    // for (int i = 0; i < r; i++) {
+    //     for (int j = 0; j < c; j++) {
+    //         printf("%d ", grid[i][j]);
+    //     }
+    //     printf("\n");
+    // }
+
+    // Output the minimum initial health required at the start (0, 0)
+    printf("%d\n", dp[0][0]);
+
+    return 0;
+}
