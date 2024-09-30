@@ -1,0 +1,29 @@
+def knapsack(capacity, weights, values, n):
+    # Create a 2D DP array to store the maximum value for each subproblem
+    dp = [[0 for _ in range(capacity + 1)] for _ in range(n + 1)]
+    
+    # Build the table in bottom-up manner
+    for i in range(1, n + 1):
+        for w in range(1, capacity + 1):
+            if weights[i - 1] <= w:
+                # Either take the item or leave it
+                dp[i][w] = max(values[i - 1] + dp[i - 1][w - weights[i - 1]], dp[i - 1][w])
+            else:
+                # If the item cannot be included, just carry forward the previous value
+                dp[i][w] = dp[i - 1][w]
+    
+    # The bottom-right cell contains the maximum value that can be obtained
+    return dp[n][capacity]
+
+t=int(input())
+for j in range(t):
+    cap,num=map(int, input().split())
+    weights=[]
+    values=[]
+    for i in range(num):
+        w, v = map(int, input().split())
+        weights.append(w)
+        values.append(v)
+        
+    res=knapsack(cap,weights,values,num)
+    print(res)
